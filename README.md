@@ -77,9 +77,9 @@ Note - dont have folders with spaces ,it creates problems
  b) enable useJmx=true and it's connectorPort (1099,2099)
 
 3) Ensure both point to same kahadb by updating the below property -
-        <persistenceAdapter>
-            <kahaDB directory="D:/apache-activemq-5.15.9/kahadb"/>
-        </persistenceAdapter>
+    <persistenceAdapter>
+          <kahaDB directory="D:/apache-activemq-5.15.9/kahadb"/>
+    </persistenceAdapter>
 
 3) Go to jetty.xml and change the port of one broker to 8171
 
@@ -91,4 +91,5 @@ set JAVA_OPTS=-Dwebconsole.type=properties -Dwebconsole.jms.url=failover:(tcp://
 however it is not required ! .
 You can simply start both the brokers pointing to different webconsole (master would work fine ,but slave would be temporarily down
 
-
+You can also refer to http://chamilad.github.io/blog/2015/11/17/creating-a-simple-activemq-master-slash-slave-setup/
+for setup
