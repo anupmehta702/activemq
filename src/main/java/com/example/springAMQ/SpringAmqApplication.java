@@ -2,25 +2,16 @@ package com.example.springAMQ;
 
 import com.example.springAMQ.compositeQueue.CompositeMessageSender;
 import com.example.springAMQ.jmsxgroupId.MessageSender;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQTextMessage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
-import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
-import org.springframework.jms.support.converter.MessageConverter;
-import org.springframework.jms.support.converter.MessageType;
 
-import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
-import java.util.Date;
 
 @SpringBootApplication
 @EnableJms
@@ -47,12 +38,12 @@ public class SpringAmqApplication {
     }*/
 
 
-    String BROKER_URL = "tcp://localhost:61616";
+    String BROKER_URL = "failover:(tcp://localhost:61616,tcp://localhost:61626)";
     String BROKER_USERNAME = "admin";
     String BROKER_PASSWORD = "admin";
 
     @Bean
-    public ActiveMQConnectionFactory connectionFactory(){
+    public ActiveMQConnectionFactory connectionFactory() {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setBrokerURL(BROKER_URL);
         connectionFactory.setPassword(BROKER_USERNAME);
@@ -61,7 +52,7 @@ public class SpringAmqApplication {
     }
 
     @Bean
-    public JmsTemplate jmsTemplate(){
+    public JmsTemplate jmsTemplate() {
         JmsTemplate template = new JmsTemplate();
         template.setConnectionFactory(connectionFactory());
         return template;
@@ -91,7 +82,6 @@ public class SpringAmqApplication {
 
 
     }
-
 
 
 }

@@ -9,7 +9,9 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class MessageSender {
@@ -33,13 +35,14 @@ public class MessageSender {
         jmsTemplate.convertAndSend("mailbox", getActiveMQTextMessage("microsoft"));
         jmsTemplate.convertAndSend("mailbox", getActiveMQTextMessage("yahoo"));
         jmsTemplate.convertAndSend("mailbox", getActiveMQTextMessage("facebook"));
+        Thread.sleep(20000);
         jmsTemplate.convertAndSend("mailbox", getActiveMQTextMessage("facebook"));
+
     }
 
     private static ActiveMQTextMessage getActiveMQTextMessage(String type) throws JMSException, InterruptedException {
         ActiveMQTextMessage message = new ActiveMQTextMessage();
         message.setText("Msg from "+type+" sent at "+new Date());
-        //Thread.sleep(2000);
         message.setStringProperty("JMSXGroupID", type);
         return message;
     }
