@@ -1,10 +1,10 @@
 Intention is to test JMSXGroupId, composite queue ,concurrency level.
 
+Refer - https://nofluffjuststuff.com/blog/bruce_snyder/2011/08/tuning_jms_message_consumption_in_spring for informaiton related to factory settings and options
+
 THe code has a queue named mailbox
 it has three consumers (threads listening to same queue)
-
 However we write msg to mailbox queue along with setting JMSXGroupID
-
 You would notice
 receiver0 would receive only msg from one JMSXGroupID in correct order .Same with other receivers(1 and 2)
 
@@ -15,8 +15,8 @@ Received by receiver2 <Msg from gmail sent at Tue Jun 18 14:16:05 IST 2019> at -
 Received by receiver1 <Msg from yahoo sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
 Received by receiver1 <Msg from yahoo sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
 Received by receiver2 <Msg from gmail sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-Received by receiver0 msg - <Msg from microsoft sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-Received by receiver0 msg - <Msg from microsoft sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
+Received by receiver0 <Msg from microsoft sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
+Received by receiver0 <Msg from microsoft sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
 Received by receiver1 <Msg from yahoo sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
 Received by receiver2 <Msg from facebook sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
 Received by receiver2 <Msg from facebook sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
