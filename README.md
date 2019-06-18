@@ -1,6 +1,8 @@
 Intention is to test JMSXGroupId, composite queue ,concurrency level.
 
-Refer - https://nofluffjuststuff.com/blog/bruce_snyder/2011/08/tuning_jms_message_consumption_in_spring for informaiton related to factory settings and options
+Refer - https://nofluffjuststuff.com/blog/bruce_snyder/2011/08/tuning_jms_message_consumption_in_spring 
+http://activemq.apache.org/what-is-the-prefetch-limit-for.html
+for informaiton related to factory settings and options
 
 THe code has a queue named mailbox
 it has three consumers (threads listening to same queue)
