@@ -1,4 +1,4 @@
-package com.example.springAMQ.jmsxgroupId;
+package com.example.springAMQ.jmsType;
 
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;

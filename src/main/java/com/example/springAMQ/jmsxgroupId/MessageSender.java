@@ -19,11 +19,27 @@ public class MessageSender {
     @Autowired
     JmsTemplate jmsTemplate;
 
+    int counter=1;
+
     public MessageSender() {
     }
 
     public MessageSender(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
+    }
+
+
+    public  void sendMessagesUsingJMSType() throws JMSException, InterruptedException {
+        jmsTemplate.convertAndSend("mailboxUsingJMSType", getActiveMQTextMessageUsingJMSType("gmail"));
+        jmsTemplate.convertAndSend("mailboxUsingJMSType", getActiveMQTextMessageUsingJMSType("yahoo"));
+        jmsTemplate.convertAndSend("mailboxUsingJMSType", getActiveMQTextMessageUsingJMSType("yahoo"));
+        jmsTemplate.convertAndSend("mailboxUsingJMSType", getActiveMQTextMessageUsingJMSType("gmail"));
+        jmsTemplate.convertAndSend("mailboxUsingJMSType", getActiveMQTextMessageUsingJMSType("yahoo"));
+        jmsTemplate.convertAndSend("mailboxUsingJMSType", getActiveMQTextMessageUsingJMSType("facebook"));
+        jmsTemplate.convertAndSend("mailboxUsingJMSType", getActiveMQTextMessageUsingJMSType("facebook"));
+        jmsTemplate.convertAndSend("mailboxUsingJMSType", getActiveMQTextMessageUsingJMSType("outlook"));
+        jmsTemplate.convertAndSend("mailboxUsingJMSType", getActiveMQTextMessageUsingJMSType("outlook"));
+
     }
 
     public  void sendMessagesUsingJMSXGroupId() throws JMSException, InterruptedException {
@@ -35,15 +51,33 @@ public class MessageSender {
         jmsTemplate.convertAndSend("mailbox", getActiveMQTextMessage("microsoft"));
         jmsTemplate.convertAndSend("mailbox", getActiveMQTextMessage("yahoo"));
         jmsTemplate.convertAndSend("mailbox", getActiveMQTextMessage("facebook"));
-        Thread.sleep(20000);
         jmsTemplate.convertAndSend("mailbox", getActiveMQTextMessage("facebook"));
 
     }
 
-    private static ActiveMQTextMessage getActiveMQTextMessage(String type) throws JMSException, InterruptedException {
+    private  ActiveMQTextMessage getActiveMQTextMessageUsingJMSType(String type) throws JMSException, InterruptedException {
         ActiveMQTextMessage message = new ActiveMQTextMessage();
         message.setText("Msg from "+type+" sent at "+new Date());
+        if(type.equalsIgnoreCase("yahoo")) {
+            message.setJMSType("YahooMessage");
+        }else if(type.equalsIgnoreCase("gmail")) {
+            message.setJMSType("GmailMessage");
+        }
+        //message.setStringProperty("JMSXGroupID", type);
+        return message;
+    }
+
+
+    private  ActiveMQTextMessage getActiveMQTextMessage(String type) throws JMSException, InterruptedException {
+        ActiveMQTextMessage message = new ActiveMQTextMessage();
+
+        message.setText("Msg from "+type+" sent at "+new Date());
+        /*if(type.equalsIgnoreCase("yahoo") && counter ==3 ){
+            System.out.println("Deliberately setting group seq to -1");
+            message.setIntProperty("JMSXGroupSeq", -1);
+        }*/
         message.setStringProperty("JMSXGroupID", type);
+        counter++;
         return message;
     }
 

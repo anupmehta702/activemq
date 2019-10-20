@@ -1,47 +1,40 @@
-Intention is to test JMSXGroupId, composite queue ,concurrency level.
+Intention is to test 
+JMSXGroupId,
+JMSType, 
+composite queue ,
+concurrency level.
 
 Refer - https://nofluffjuststuff.com/blog/bruce_snyder/2011/08/tuning_jms_message_consumption_in_spring 
 http://activemq.apache.org/what-is-the-prefetch-limit-for.html
 for informaiton related to factory settings and options
 
+JMSXGroupId Test -
 THe code has a queue named mailbox
-it has three consumers (threads listening to same queue)
+it has three consumers [Receiver 1,2,and 3](threads listening to same queue)
 However we write msg to mailbox queue along with setting JMSXGroupID
 You would notice
-receiver0 would receive only msg from one JMSXGroupID in correct order .Same with other receivers(1 and 2)
+receiver0 would receive only msg from one JMSXGroupID in correct order .
+Same with other receivers(1 and 2)
 
 Run activeMQ first on localhost:8161
-
- output is as follows -
+output is as follows -
+ Received by receiver2 <Msg from gmail sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
+ Received by receiver1 <Msg from yahoo sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
+ Received by receiver1 <Msg from yahoo sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
+ Received by receiver2 <Msg from gmail sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
+ Received by receiver0 <Msg from microsoft sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
+ Received by receiver0 <Msg from microsoft sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
+ Received by receiver1 <Msg from yahoo sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
+ Received by receiver2 <Msg from facebook sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
+ Received by receiver2 <Msg from facebook sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
  
-Received by receiver2 <Msg from gmail sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-
-Received by receiver1 <Msg from yahoo sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-
-Received by receiver1 <Msg from yahoo sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-
-Received by receiver2 <Msg from gmail sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-
-Received by receiver0 <Msg from microsoft sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-
-Received by receiver0 <Msg from microsoft sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-
-Received by receiver1 <Msg from yahoo sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-
-Received by receiver2 <Msg from facebook sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-
-Received by receiver2 <Msg from facebook sent at Tue Jun 18 14:16:05 IST 2019> at - Tue Jun 18 14:16:05 IST 2019
-
-Received by CompositeQueueReceiver foo queue  <Msg from MY.QUEUE delivered at 5>
-
 as you would notice
 receiver0 receives msgs from only yahoo
 receiver1 from gmail
 receiver2 from microsoft
 
-
+Composite Queue Test
 For composite queue edit activemq.xml in bin folder ,add below code
-
 			<destinationInterceptors>
 				 <virtualDestinationInterceptor>
 				   <virtualDestinations>
@@ -58,10 +51,25 @@ For composite queue edit activemq.xml in bin folder ,add below code
 Output seen
 Received by CompositeQueueReceiver foo queue  <Msg from MY.QUEUE delivered at 50>
 
+Consumer side selector test
+We have Receiver 3 with selector YahooMessage 
+Receiver 4 with selector NonYahooMessage
+Receiver5 with no selector
+
+I have also enabled JMXGroupID to show how things behave between JMSType and JMXGroupID
+My observation is that JMSType takes precedence over JMSXGroupId.
+
+Received by receiver4 <Msg from gmail sent at Fri Oct 18 16:48:02 IST 2019> at - Fri Oct 18 16:48:02 IST 2019 with selector - NonYahooMessage
+Received by receiver3 <Msg from yahoo sent at Fri Oct 18 16:48:03 IST 2019> at - Fri Oct 18 16:48:05 IST 2019 with selector - YahooMessage
+Received by receiver3 <Msg from yahoo sent at Fri Oct 18 16:48:05 IST 2019> at - Fri Oct 18 16:48:07 IST 2019 with selector - YahooMessage
+Received by receiver4 <Msg from gmail sent at Fri Oct 18 16:48:07 IST 2019> at - Fri Oct 18 16:48:09 IST 2019 with selector - NonYahooMessage
+Received by receiver3 <Msg from yahoo sent at Fri Oct 18 16:48:09 IST 2019> at - Fri Oct 18 16:48:09 IST 2019 with selector - YahooMessage
+Received by receiver5 <Msg from facebook sent at Fri Oct 18 16:48:09 IST 2019> at - Fri Oct 18 16:48:11 IST 2019 with no selector
+Received by receiver5 <Msg from facebook sent at Fri Oct 18 16:48:11 IST 2019> at - Fri Oct 18 16:48:13 IST 2019 with no selector
+
 
 
 I also tried master slave configuration -
-
 In short ,I started two brokers (61616,61626) both connected to common kahadb. Out of them only one would be active
 and the other would be slave since the slave would not have lock on the common kahadb.
 
@@ -93,3 +101,7 @@ You can simply start both the brokers pointing to different webconsole (master w
 
 You can also refer to http://chamilad.github.io/blog/2015/11/17/creating-a-simple-activemq-master-slash-slave-setup/
 for setup
+
+
+
+

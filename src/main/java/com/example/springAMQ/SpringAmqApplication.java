@@ -3,13 +3,18 @@ package com.example.springAMQ;
 import com.example.springAMQ.compositeQueue.CompositeMessageSender;
 import com.example.springAMQ.jmsxgroupId.MessageSender;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQPrefetchPolicy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import javax.jms.JMSException;
 
@@ -48,6 +53,9 @@ public class SpringAmqApplication {
         connectionFactory.setBrokerURL(BROKER_URL);
         connectionFactory.setPassword(BROKER_USERNAME);
         connectionFactory.setUserName(BROKER_PASSWORD);
+        ActiveMQPrefetchPolicy prefetchPolicy=new ActiveMQPrefetchPolicy();
+        prefetchPolicy.setQueuePrefetch(1);
+        connectionFactory.setPrefetchPolicy(prefetchPolicy);
         return connectionFactory;
     }
 
@@ -62,7 +70,7 @@ public class SpringAmqApplication {
     public DefaultJmsListenerContainerFactory myFactory() {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory());
-        factory.setConcurrency("1-4");//sets number of consumers that can parallely process msges from queue
+        factory.setConcurrency("2");//sets number of consumers that can parallely process msges from queue
         // follow https://nofluffjuststuff.com/blog/bruce_snyder/2011/08/tuning_jms_message_consumption_in_spring
 
         return factory;
@@ -72,14 +80,18 @@ public class SpringAmqApplication {
     public static void main(String[] args) throws JMSException, InterruptedException {
         ConfigurableApplicationContext context = SpringApplication.run(SpringAmqApplication.class, args);
 
-        //For JMSXGroupID
+      /*  //For JMSXGroupID
         MessageSender jmsXGroupIdMessageSender = context.getBean(MessageSender.class);
         jmsXGroupIdMessageSender.sendMessagesUsingJMSXGroupId();
+*/
+        //For JMSType using queue mailboxUsingJMSType
+        MessageSender jmsTypeMessageSender = context.getBean(MessageSender.class);
+        jmsTypeMessageSender.sendMessagesUsingJMSType();
 
-        //For Composite queue
+  /*      //For Composite queue
         CompositeMessageSender compMsgSender = context.getBean(CompositeMessageSender.class);
         compMsgSender.sendMessagesUsingCompositeQueue();
-
+*/
 
     }
 
