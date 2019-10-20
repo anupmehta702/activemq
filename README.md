@@ -57,15 +57,39 @@ Receiver 4 with selector NonYahooMessage
 Receiver5 with no selector
 
 I have also enabled JMXGroupID to show how things behave between JMSType and JMXGroupID
-My observation is that JMSType takes precedence over JMSXGroupId.
 
-Received by receiver4 <Msg from gmail sent at Fri Oct 18 16:48:02 IST 2019> at - Fri Oct 18 16:48:02 IST 2019 with selector - NonYahooMessage
-Received by receiver3 <Msg from yahoo sent at Fri Oct 18 16:48:03 IST 2019> at - Fri Oct 18 16:48:05 IST 2019 with selector - YahooMessage
-Received by receiver3 <Msg from yahoo sent at Fri Oct 18 16:48:05 IST 2019> at - Fri Oct 18 16:48:07 IST 2019 with selector - YahooMessage
-Received by receiver4 <Msg from gmail sent at Fri Oct 18 16:48:07 IST 2019> at - Fri Oct 18 16:48:09 IST 2019 with selector - NonYahooMessage
-Received by receiver3 <Msg from yahoo sent at Fri Oct 18 16:48:09 IST 2019> at - Fri Oct 18 16:48:09 IST 2019 with selector - YahooMessage
-Received by receiver5 <Msg from facebook sent at Fri Oct 18 16:48:09 IST 2019> at - Fri Oct 18 16:48:11 IST 2019 with no selector
-Received by receiver5 <Msg from facebook sent at Fri Oct 18 16:48:11 IST 2019> at - Fri Oct 18 16:48:13 IST 2019 with no selector
+1) JMSType + JMXGroupID 
+receiver 4 - gmail msgs Consumer based selector
+receiver 3 - yahoo msgs Consumer based selector
+receiver 5 - facebook,outlook no selector
+
+Received by receiver4 <Msg from gmail sent at Sun Oct 20 13:20:27 IST 2019> at - Sun Oct 20 13:20:29 IST 2019 with selector - GmailMessage
+Received by receiver3 <Msg from yahoo sent at Sun Oct 20 13:20:29 IST 2019> at - Sun Oct 20 13:20:31 IST 2019 with selector - YahooMessage
+Received by receiver3 <Msg from yahoo sent at Sun Oct 20 13:20:31 IST 2019> at - Sun Oct 20 13:20:33 IST 2019 with selector - YahooMessage
+Received by receiver4 <Msg from gmail sent at Sun Oct 20 13:20:33 IST 2019> at - Sun Oct 20 13:20:35 IST 2019 with selector - GmailMessage
+Received by receiver3 <Msg from yahoo sent at Sun Oct 20 13:20:35 IST 2019> at - Sun Oct 20 13:20:35 IST 2019 with selector - YahooMessage
+Received by receiver5 <Msg from facebook sent at Sun Oct 20 13:20:35 IST 2019> at - Sun Oct 20 13:20:37 IST 2019 with no selector
+Received by receiver5 <Msg from facebook sent at Sun Oct 20 13:20:37 IST 2019> at - Sun Oct 20 13:20:37 IST 2019 with no selector
+Received by receiver5 <Msg from outlook sent at Sun Oct 20 13:20:37 IST 2019> at - Sun Oct 20 13:20:39 IST 2019 with no selector
+Received by receiver5 <Msg from outlook sent at Sun Oct 20 13:20:40 IST 2019> at - Sun Oct 20 13:20:40 IST 2019 with no selector
+
+2) Only JMSType (but JMSType on two receivers and one receiver has no JMSType)
+This is dangerous bcoz non selector consumer can receive any msgs and selector consumer cannot gurantee that all selector msgs would reach him
+Receiver 5 is not consumer based selector yet it received Yahoo msg meant for receiver 3
+ 
+Received by receiver4 <Msg from gmail sent at Sun Oct 20 13:14:57 IST 2019> at - Sun Oct 20 13:14:59 IST 2019 with selector - GmailMessage
+Received by receiver3 <Msg from yahoo sent at Sun Oct 20 13:14:59 IST 2019> at - Sun Oct 20 13:15:01 IST 2019 with selector - YahooMessage
+<b>Received by receiver5 <Msg from yahoo sent at Sun Oct 20 13:15:01 IST 2019> at - Sun Oct 20 13:15:01 IST 2019 with no selector</b>
+Received by receiver4 <Msg from gmail sent at Sun Oct 20 13:15:01 IST 2019> at - Sun Oct 20 13:15:03 IST 2019 with selector - GmailMessage
+Received by receiver3 <Msg from yahoo sent at Sun Oct 20 13:15:03 IST 2019> at - Sun Oct 20 13:15:05 IST 2019 with selector - YahooMessage
+Received by receiver5 <Msg from facebook sent at Sun Oct 20 13:15:05 IST 2019> at - Sun Oct 20 13:15:07 IST 2019 with no selector
+Received by receiver5 <Msg from facebook sent at Sun Oct 20 13:15:07 IST 2019> at - Sun Oct 20 13:15:07 IST 2019 with no selector
+Received by receiver5 <Msg from outlook sent at Sun Oct 20 13:15:07 IST 2019> at - Sun Oct 20 13:15:07 IST 2019 with no selector
+Received by receiver5 <Msg from outlook sent at Sun Oct 20 13:15:07 IST 2019> at - Sun Oct 20 13:15:09 IST 2019 with no selector
+
+
+
+
 
 
 

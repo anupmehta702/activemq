@@ -63,7 +63,7 @@ public class MessageSender {
         }else if(type.equalsIgnoreCase("gmail")) {
             message.setJMSType("GmailMessage");
         }
-        //message.setStringProperty("JMSXGroupID", type);
+        message.setStringProperty("JMSXGroupID", type);
         return message;
     }
 
